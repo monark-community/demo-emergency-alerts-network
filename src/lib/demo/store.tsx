@@ -98,12 +98,15 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
 
   // Hydrate from localStorage after mount (the server render uses the seed).
   React.useEffect(() => {
-    const stored = load()
-    const initial = stored ?? seedState(Date.now())
-    stateRef.current = initial
-    setState(initial)
-    setNow(Date.now() + initial.clockOffset)
-    setHydrated(true)
+    const id = window.setTimeout(() => {
+      const stored = load()
+      const initial = stored ?? seedState(Date.now())
+      stateRef.current = initial
+      setState(initial)
+      setNow(Date.now() + initial.clockOffset)
+      setHydrated(true)
+    }, 0)
+    return () => window.clearTimeout(id)
   }, [])
 
   React.useEffect(() => {

@@ -87,7 +87,7 @@ export function CityMap({
       {STREETS.horizontal.map((s) => (
         <text
           key={s.name}
-          x={18}
+          x={400}
           y={s.y + 4.5}
           className="fill-map-label font-mono"
           fontSize={11}

@@ -20,7 +20,6 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
         <div className="max-w-sm">
           <GuardianWordmark />
           <p className="mt-4 text-sm text-muted-foreground">{c.footer.tagline}</p>
-          <p className="mt-4 text-sm font-medium">{c.call911}</p>
         </div>
         <nav aria-label={c.footer.linksLabel}>
           <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
@@ -50,7 +49,6 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
             <span className="inline-flex items-center gap-1.5 rounded-sm bg-accent px-1.5 py-0.5 font-semibold text-accent-foreground">
               {c.demoBadge}
             </span>
-            <span>{c.testnet}</span>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <span>
