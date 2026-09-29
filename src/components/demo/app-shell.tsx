@@ -173,9 +173,9 @@ function Chrome({ children }: { children: ReactNode }) {
       <Tabs variant="bottom" />
       <WalletPrompt />
       <Toaster
-        position={desktop ? "top-right" : "bottom-center"}
+        position={desktop ? "top-right" : "top-center"}
         offset={{ top: 84, right: 24 }}
-        mobileOffset={{ bottom: 92, left: 12, right: 12 }}
+        mobileOffset={{ top: 76, left: 12, right: 12 }}
       />
     </>
   )

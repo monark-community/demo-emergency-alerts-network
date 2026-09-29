@@ -8,6 +8,8 @@ Guardian is an independent civic-safety product incubated by Monark (`monark-bra
 
 Decisions made unattended are marked **Decision:** with the reason.
 
+**Revision (restraint pass).** After the owner's "too loaded" feedback (brand guidelines §8 "Restraint" and §11), the site was cut down before shipping: the home page went from eight sections to five (the accountability table and the FAQ moved to `/how-it-works`, the campuses section and its photo were cut, "four moves" became three), the hero lost its eyebrow, `/how-it-works` lost "on-chain vs not" and "what Guardian is not" (covered by the FAQ), the FAQ went from six to five questions, and the app lost its explanatory paragraphs (situation hints, deposit explanation now behind a "How is it used?" disclosure, repeated testnet notes). The testnet notice now appears once per transaction, in the wallet prompt, and the footer carries only "Demo · simulated data". This plan describes what shipped.
+
 ---
 
 ## 1. Product brief
@@ -68,11 +70,11 @@ Every route lives under `/[locale]` (`en`, `fr`); `/` redirects by `Accept-Langu
 
 | Route | Purpose | Sections, in order |
 |-|-|-|
-| `/` | Explain the product in 60 seconds and send people to the demo | Hero (phone mid-alert) · "The gap" (photo, not-911 moments) · Four moves (raise, notified, meet, settle) · Accountability rules · Privacy (area vs pin diagram) · Be a responder (photo) · Communities and campuses (photo) · FAQ · Closing CTA |
+| `/` | Explain the product in 60 seconds and send people to the demo | Hero (phone mid-alert, 911 safety line) · 1 "The gap" (photo, one line) · 2 Three moves (hold to raise, meet in person, settle) · 3 Privacy (area vs pin diagram, night band) · 4 Be a responder (photo) · 5 Closing CTA |
 | `/app` | Interactive demo: raise an alert (sender view) | App shell · setup gate (connect, pre-approve) · situation + radius + hold-to-raise · live map and responder list · meet code · settle |
 | `/app/respond` | Interactive demo: responder view | Nearby alerts (or empty state) · accept · walk (map) · meet code entry · awaiting confirmation · paid / flagged |
 | `/app/record` | Your record: reputation, wallet, ledger, allowance | Reputation and tier ladder · wallet and allowance (change it) · ledger of every simulated tx · alert history · Reset demo |
-| `/how-it-works` | The rules in full, for sceptical users and institutions | Lifecycle diagram · the money rules table · privacy levels · reputation tiers · what's on-chain and what isn't · what Guardian is not |
+| `/how-it-works` | The rules in full, for sceptical users and institutions | Lifecycle diagram · accountability rules table · where the deposit goes (per radius) · who sees what · reputation tiers and changes · FAQ (5) · CTA to the demo |
 | `/credits` | Photo credits and licences | Photographer list |
 | `/pricing` | Internal strategy review only (never linked, noindex) | Three plans · reasoning · what is never charged |
 | 404 | Friendly not-found | Message · links home and to the demo |
@@ -81,9 +83,9 @@ Every route lives under `/[locale]` (`en`, `fr`); `/` redirects by `Accept-Langu
 
 **Header:** Guardian wordmark · "How it works" · "Demo" · EN/FR switch · theme toggle · primary button "Open the demo" (inside the app: the wallet control instead). Mobile: wordmark + menu button opening a sheet with the same items.
 
-**Footer:** one-line description · links (Home, How it works, Demo, Credits) · "Demo · simulated data" · "Testnet demo · not financial advice · no real funds" · "Built with Monark" credit (muted, 12–13px) · © year Guardian. No pricing link.
+**Footer:** one-line description · links (Home, How it works, Demo, Credits, Project brief, Source code) · "Demo · simulated data" chip · © year Guardian · photo credits link · "Built with Monark" credit (muted, 13px). No pricing link. The testnet notice lives only in the wallet prompt of value-moving transactions.
 
-**App shell:** top bar (wordmark, "Demo · simulated data" badge, network badge, wallet), tabs "Get help" / "Respond" / "My record" (bottom bar on mobile, left rail on desktop), demo controls button (fail next transaction, skip ahead 5 min, simulate an incoming alert, reset demo).
+**App shell:** one top bar (wordmark, "Demo · simulated data" chip, tabs on desktop, network badge on wide screens, EN/FR, theme, demo controls, wallet), tabs "Get help" / "Respond" / "My record" (bottom bar on mobile), demo controls sheet (fail next transaction, skip ahead 1 min, simulate a nearby alert, reset demo; EN/FR and theme on mobile). Toasts sit top-right on desktop and at the top (over the map, below the bar) on mobile, never over the active panel.
 
 ## 5. Feature highlights
 
@@ -91,21 +93,21 @@ Every route lives under `/[locale]` (`en`, `fr`); `/` redirects by `Accept-Langu
 |-|-|-|-|
 | Hold-to-raise with radius | You can't raise an alert by accident, and you choose how far it reaches | Home hero, `/app` | Flow 2 |
 | Approximate area until accepted | Your exact location only goes to people who said yes | Home privacy section, `/how-it-works`, `/app/respond` (area → pin on accept) | Flow 3 |
-| Meet-code check-in | Help is verified as in-person, not claimed | Home "Four moves", `/app` (code plate), `/app/respond` (code entry, wrong-code error) | Flows 2 and 3 |
-| Deposit that pays who showed up | Responders' time is respected; the rule is simple and visible | Home accountability, `/app` settle, `/app/record` ledger | Flow 2 (settle), Flow 3 (paid) |
-| False-alarm flag | Pranks cost the prankster; responders still get paid for coming | Home accountability, `/how-it-works`, `/app/respond` | Flow 4 |
+| Meet-code check-in | Help is verified as in-person, not claimed | Home "Three moves", `/app` (code plate), `/app/respond` (code entry, wrong-code error) | Flows 2 and 3 |
+| Deposit that pays who showed up | Responders' time is respected; the rule is simple and visible | `/how-it-works` rules, `/app` settle, `/app/record` ledger | Flow 2 (settle), Flow 3 (paid) |
+| False-alarm flag | Pranks cost the prankster; responders still get paid for coming | `/how-it-works`, `/app/respond` | Flow 4 |
 | Reputation tiers | Reliable responders are recognised and unlock more trust | `/app/record`, `/how-it-works` | Flows 3–5 |
 
 ## 6. Key flows
 
-Every transaction goes through the simulated wallet prompt (Confirm / Reject), then pending (1.2–2.4 s), then confirmed (hash and block) or failed (Demo controls: "Fail the next transaction"). Demo time runs 10× faster than real time.
+Every transaction goes through the simulated wallet prompt (Confirm / Reject), then pending (1.2–2.4 s), then confirmed (hash and block) or failed (Demo controls: "Fail the next transaction"). Walking ETAs are shown 10× slower than they run; the 30-minute auto-release and dispute windows are shortened to 20 seconds in the demo.
 
 **Flow 1: Set up before you need it (connect + pre-approve).**
 1. `/app` shows the gate: "Set up Guardian before you need it." → Connect demo wallet → wallet prompt → *Rejected:* inline alert "You declined the connection. Nothing was shared." → retry → connected.
 2. Pre-approve a safety deposit: choose 5, 10 or 20 tUSDC → Approve → prompt → *pending* "Approving 10.00 tUSDC…" → *confirmed:* "Approved. Up to 10.00 tUSDC can move into an alert pool, never more." → the raise panel appears. *Failed:* "The approval didn't go through. No allowance was set." with Try again.
 
 **Flow 2: Raise an alert and get help (sender).**
-1. Choose the situation (Being followed · Feel unsafe · Someone is hurt · Other) and radius (150 / 300 / 500 m). The deposit (from the allowance, 4.00 tUSDC by default) is shown with the testnet notice.
+1. Choose the situation (Being followed · Feel unsafe · Someone is hurt · Other) and radius (150 / 300 / 500 m). The deposit (4 tUSDC for 300 m) is shown; "How is it used?" expands the rule.
 2. Press and hold "Hold to raise" for 1 second (keyboard: hold Space or Enter). Releasing early shows "Keep holding to raise."
 3. Wallet prompt → *pending* "Broadcasting to responders within 300 m…" → *failed:* "The alert didn't go out. Your deposit hasn't moved. If you're in danger, call 911 now." with Try again → *confirmed:* rings roll out over the map; "6 responders notified".
 4. Responders accept in turn (Léa, Trusted, first-aid attested; then Omar) and walk in along the streets; ETAs count down.
@@ -114,14 +116,14 @@ Every transaction goes through the simulated wallet prompt (Confirm / Reject), t
 7. Alternatives: *Cancel* before anyone accepts → full refund. Cancel after someone accepted → 1.00 tUSDC to each responder on the way, rest refunded. No answer → auto-release after 30 min (Demo controls: Skip ahead).
 
 **Flow 3: Respond to a nearby alert (responder).**
-1. `/app/respond` lists one open alert: "Being followed · ~220 m · near Prince-Arthur and Hutchison · 4.00 tUSDC". Area only, no pin. *Empty state:* "All quiet within 500 m." with "Simulate a nearby alert".
+1. `/app/respond` lists one open alert: "Being followed · Prince-Arthur × Hutchison · ~260 m · 4 tUSDC". Area only, no pin. *Empty state:* "All quiet within 500 m." with "Simulate a nearby alert".
 2. Accept → prompt → *pending* "Telling them you're coming…" → *confirmed:* exact pin unlocks; route and ETA. *Failed:* "Couldn't accept. They haven't been told you're coming."
 3. Walk (animated); "I'm here" enables on arrival.
 4. Enter the 4-digit code they show you (the demo shows "their screen" beside it). *Wrong code:* "That code doesn't match. Ask them to read it again." → correct → check-in tx → "Checked in. Waiting for them to confirm they're safe (auto-releases in 30 min)."
-5. Sender confirms → *paid:* "+2.00 tUSDC (split with Omar) · reputation +6". Ledger updated.
+5. Sender confirms → *paid:* "+2.00 tUSDC (split with Camille R.) · +6 reputation". Ledger updated. Medical alerts appear locked for responders below Trusted (75).
 
 **Flow 4: Flag a false alarm.**
-1. From an accepted alert, on arrival: "Nobody here?" → dialog with reasons (Nobody at the location · They say they didn't send it · Clearly a prank) → Flag → prompt → *pending* → *confirmed:* "Flag recorded. The sender has 30 minutes to dispute it."
+1. "Simulate a nearby alert" adds a second alert (av. du Parc × Milton) that turns out to be a false alarm. Accept, walk; on arrival "their screen" is empty: "Nobody here?" → dialog with reasons (Nobody at the location · They say they didn't send it · Clearly a prank) → Flag → prompt → *pending* → *confirmed:* "Flag recorded. The sender has 30 minutes to dispute it."
 2. Skip ahead (or wait) → *upheld:* "Not disputed. You received 4.00 tUSDC for your time; the sender's reputation dropped by 25." *Failed tx:* "Your flag wasn't recorded. Try again."
 
 **Flow 5: Your record.** `/app/record`: reputation score, tier ladder with what the next tier unlocks, wallet balance and allowance (change allowance → approval tx), full ledger with statuses, alert history, and Reset demo (confirmation dialog).
@@ -136,38 +138,39 @@ All strings live in `src/i18n/dictionaries/en.ts` and `fr.ts`; the tables below 
 
 | Section | EN | FR |
 |-|-|-|
-| Eyebrow | Neighbourhood safety network | Réseau de sécurité de quartier |
 | H1 | Help from the people already nearby. | L'aide des gens déjà autour de vous. |
 | Sub | Guardian asks neighbours within a few hundred metres to come to you when you feel unsafe. Your small deposit pays whoever verifiably shows up. | Guardian demande aux voisins à quelques centaines de mètres de venir vous rejoindre quand vous ne vous sentez pas en sécurité. Votre petit dépôt rémunère ceux qui se présentent vraiment. |
 | CTAs | Try the live demo · How it works | Essayer la démo · Comment ça marche |
 | Safety line | Life in danger? Call 911 first. Guardian brings neighbours, not emergency services. | Une vie en danger ? Composez d'abord le 911. Guardian mobilise des voisins, pas les services d'urgence. |
 | Gap H2 | Most frightening moments aren't a 911 call. Yet. | La plupart des moments inquiétants ne justifient pas le 911. Pas encore. |
-| Gap body | Someone has been behind you for three blocks. A friend can't stand up outside the bar. Your neighbour fell on the ice and can't reach her phone. There are people two minutes away who would help. There's just no way to ask them. | Quelqu'un vous suit depuis trois coins de rue. Une amie n'arrive plus à se lever devant le bar. Votre voisine a glissé sur la glace et ne rejoint pas son téléphone. À deux minutes, il y a des gens prêts à aider. Il manque seulement une façon de le leur demander. |
-| Four moves H2 | Four moves, start to finish | Quatre gestes, du début à la fin |
-| 1 | **Hold to raise.** One second, so a pocket can't do it. Pick how far it reaches. | **Maintenez pour alerter.** Une seconde, pour qu'une poche ne puisse pas le faire. Choisissez la portée. |
-| 2 | **Nearby people are asked.** Only responders inside your radius, and they see an area, not your pin. | **Les gens proches sont sollicités.** Seulement ceux dans votre rayon, qui voient un secteur, pas votre position exacte. |
-| 3 | **Meet in person.** They type the 4-digit code on your screen. That's the proof they came. | **Rencontre en personne.** Ils saisissent le code à 4 chiffres affiché chez vous. C'est la preuve de leur présence. |
-| 4 | **Settle.** Tap "I'm safe". Whoever checked in splits your deposit and earns reputation. | **Règlement.** Touchez « Je suis en sécurité ». Ceux qui se sont présentés se partagent votre dépôt et gagnent en réputation. |
-| Rules H2 | Help is paid for. False alarms aren't free. | L'aide est rémunérée. Les fausses alertes ont un prix. |
-| Rules body | The rules are written into the alert contract, so nobody has to trust a moderator's mood. | Les règles sont inscrites dans le contrat de l'alerte : personne n'a à se fier à l'humeur d'un modérateur. |
-| Rules rows | You cancel before anyone accepts → full refund · You cancel after someone set off → 1 tUSDC each for their walk, the rest back to you · You're safe → responders who checked in split the deposit · You don't answer → it releases to them after 30 minutes · Nobody was there → responders who came keep the deposit and your reputation drops | Vous annulez avant toute acceptation → remboursement complet · Vous annulez après un départ → 1 tUSDC chacun pour le déplacement, le reste vous revient · Vous êtes en sécurité → ceux qui se sont présentés se partagent le dépôt · Vous ne répondez pas → versement automatique après 30 minutes · Personne sur place → les répondants gardent le dépôt et votre réputation baisse |
+| Gap line | Followed home, a friend who can't stand, a fall on the ice. People two minutes away would help, if you could ask. | Suivie en rentrant, une amie qui ne tient plus debout, une chute sur la glace. Des gens à deux minutes aideraient, si on pouvait leur demander. |
+| Moves H2 | Three moves, start to finish | Trois gestes, du début à la fin |
+| 1 | **Hold to raise.** One second, so a pocket can't. Only people inside your radius are asked. | **Maintenez pour alerter.** Une seconde, pour qu'une poche ne puisse pas le faire. Seuls les gens de votre rayon sont sollicités. |
+| 2 | **Meet in person.** They type the 4-digit code on your screen. That's the proof they came. | **Rencontre en personne.** Ils saisissent le code à 4 chiffres affiché chez vous. C'est la preuve de leur présence. |
+| 3 | **Settle.** Tap "I'm safe". Whoever checked in splits your deposit. | **Règlement.** Touchez « Je suis en sécurité ». Ceux qui sont venus se partagent votre dépôt. |
 | Privacy H2 | Your exact location goes only to people who said yes. | Votre position exacte ne va qu'aux gens qui ont dit oui. |
-| Privacy body | Everyone in your radius sees an approximate area, about a block wide. The moment someone accepts, they alone get your pin, until the alert closes. | Tout le monde dans votre rayon voit un secteur approximatif, d'environ un pâté de maisons. Dès qu'une personne accepte, elle seule reçoit votre position, jusqu'à la fermeture de l'alerte. |
+| Privacy line | Responders nearby see a block-wide area. Only those who accept get your pin. | Les répondants proches voient un secteur d'un pâté de maisons. Seuls ceux qui acceptent reçoivent votre position. |
 | Responder H2 | Be someone's two-minute neighbour. | Soyez le voisin à deux minutes de quelqu'un. |
-| Responder body | Turn on responding when you're around. You'll only hear about alerts close enough to walk to, you can always decline, and every verified check-in builds a record other people can trust. | Activez le mode répondant quand vous êtes dans le coin. Vous ne recevez que les alertes à distance de marche, vous pouvez toujours refuser, et chaque présence vérifiée bâtit un dossier auquel les autres peuvent se fier. |
+| Responder line | Only alerts within walking distance. Decline any time. Paid only for verified, in-person help. | Seulement des alertes à distance de marche. Refusez quand vous voulez. Payé seulement pour une aide vérifiée, en personne. |
 | Responder CTA | Try responding | Essayer en tant que répondant |
-| Communities H2 | For campuses and neighbourhoods | Pour les campus et les quartiers |
-| Communities body | A campus or association can sponsor deposits so nobody hesitates over the cost, invite its trained volunteers as verified responders, and see where alerts cluster, without ever seeing who sent them. | Un campus ou une association peut commanditer les dépôts pour que personne n'hésite à cause du coût, inviter ses bénévoles formés comme répondants vérifiés et voir où les alertes se concentrent, sans jamais savoir qui les a envoyées. |
 | Closing H2 | Set it up tonight. Hope you never need it. | Configurez-le ce soir. En espérant ne jamais en avoir besoin. |
+| Closing line | Two minutes: raise an alert, watch Léa walk over, settle. | Deux minutes : lancez une alerte, regardez Léa arriver, réglez. |
 
-**FAQ (EN / FR).**
+### How it works
+
+| Section | EN | FR |
+|-|-|-|
+| H1 | The rules, in full. | Les règles, au complet. |
+| Rules H2 | Help is paid for. False alarms aren't free. | L'aide est rémunérée. Les fausses alertes ont un prix. |
+| Rules rows | You cancel before anyone accepts → full refund · You cancel after someone set off → 1 tUSDC each for their walk, the rest back to you · You tap "I'm safe" → responders who checked in split the deposit · You don't answer → it releases to them after 30 minutes · Nobody was there → responders who came keep the deposit; the sender's reputation drops | Vous annulez avant toute acceptation → remboursement complet · Vous annulez après un départ → 1 tUSDC chacun pour le déplacement, le reste vous revient · « Je suis en sécurité » → ceux qui se sont présentés se partagent le dépôt · Vous ne répondez pas → versé après 30 minutes · Personne sur place → les répondants gardent le dépôt ; la réputation de l'expéditeur baisse |
+
+**FAQ, on `/how-it-works` only (EN / FR).**
 
 1. *Does Guardian call the police or an ambulance?* No. Guardian brings nearby people. If a life is at risk, call 911 first; you can raise a Guardian alert as well. / *Guardian appelle-t-il la police ou une ambulance ?* Non. Guardian mobilise des gens à proximité. Si une vie est en danger, composez d'abord le 911 ; vous pouvez aussi lancer une alerte Guardian.
 2. *Who can see where I am?* Responders in your radius see an area about a block wide. Only those who accept see your exact pin, and only until the alert closes. / *Qui peut voir où je suis ?* Les répondants dans votre rayon voient un secteur d'environ un pâté de maisons. Seuls ceux qui acceptent voient votre position exacte, et seulement jusqu'à la fermeture de l'alerte.
 3. *Why do I pay a deposit to ask for help?* So responders know the alert is real and their time counts. It's small, you set the maximum in advance, and you get it back if you cancel before anyone sets off. / *Pourquoi payer un dépôt pour demander de l'aide ?* Pour que les répondants sachent que l'alerte est réelle et que leur temps compte. Il est modeste, vous en fixez le maximum à l'avance, et il vous est rendu si vous annulez avant tout départ.
 4. *What if someone accepts and never comes?* They're only paid after typing your meet code in person. Accepting and not arriving lowers their reputation. / *Et si quelqu'un accepte sans jamais venir ?* On n'est payé qu'après avoir saisi votre code en personne. Accepter sans se présenter fait baisser la réputation.
 5. *Can I respond without being trained?* Yes, for most alerts. Medical alerts only go to Trusted responders with a first-aid attestation. / *Puis-je répondre sans formation ?* Oui, pour la plupart des alertes. Les alertes médicales ne vont qu'aux répondants Fiables ayant une attestation de premiers soins.
-6. *Is any of this real in the demo?* No. The wallet, the network, the responders and the money are simulated on a pretend testnet. Nothing leaves your browser. / *Est-ce que quelque chose est réel dans la démo ?* Non. Le portefeuille, le réseau, les répondants et l'argent sont simulés sur un faux réseau de test. Rien ne quitte votre navigateur.
 
 **Empty and error states.**
 
@@ -251,7 +254,6 @@ Contrast (AA needs 4.5 for text, 3 for UI outlines):
 |-|-|-|
 | `public/images/walk-home-snow.jpg` (Alexander Lunyov) | A person walking alone at night: the not-911 moment | Home, "The gap" |
 | `public/images/walking-together.jpg` (Phil Hearing) | People walking together under a street lamp: the network | Home, "Be a responder" |
-| `public/images/campus-fog.jpg` (Hayden Pollard) | Lamps on a foggy campus path: institutions | Home, "For campuses and neighbourhoods" |
 
 **Built in code:** logo mark and wordmark, favicon, Open Graph image (per locale), the Milton-Parc map (hero phone and app), radius rings and pins, the area-vs-pin privacy diagram, the four-moves strip, the alert lifecycle diagram, the tier ladder, the reflective-tape stripe.
 
