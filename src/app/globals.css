@@ -1,0 +1,245 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Guardian design tokens. Installed from the Monark UI registry theme, then fully
+ * re-themed for Guardian's own identity ("exit-sign calm, street-level, legible
+ * under stress"): concrete and asphalt neutrals, exit-sign green, hi-vis yellow
+ * and a signal red kept for live alerts only. See docs/site-plan.md §8.
+ */
+@theme inline {
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-signal: var(--signal);
+  --color-signal-wash: var(--signal-wash);
+  --color-safe-wash: var(--safe-wash);
+  --color-hivis: var(--accent);
+  --color-band: var(--band);
+  --color-band-foreground: var(--band-foreground);
+  --color-map-ground: var(--map-ground);
+  --color-map-block: var(--map-block);
+  --color-map-street: var(--map-street);
+  --color-map-park: var(--map-park);
+  --color-map-label: var(--map-label);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --animate-ring-out: ring-out 1.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  --animate-pin-in: pin-in 320ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  --animate-clasp: clasp 700ms ease-out both;
+  --animate-slide-share: slide-share 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-rise: rise 360ms ease-out both;
+}
+
+:root {
+  --radius: 0.375rem;
+  --background: #f1f2ee;
+  --foreground: #141a19;
+  --card: #fbfbf8;
+  --card-foreground: #141a19;
+  --popover: #fbfbf8;
+  --popover-foreground: #141a19;
+  --primary: #0b6b4b;
+  --primary-foreground: #ffffff;
+  --secondary: #e3e6e0;
+  --secondary-foreground: #141a19;
+  --muted: #e3e6e0;
+  --muted-foreground: #4d5653;
+  --accent: #f4ce2b;
+  --accent-foreground: #141a19;
+  --destructive: #b3261e;
+  --destructive-foreground: #ffffff;
+  --border: #c9cfc8;
+  --input: #7e8883;
+  --ring: #0b6b4b;
+  --chart-1: #0b6b4b;
+  --chart-2: #c99a00;
+  --chart-3: #b3261e;
+  --chart-4: #2f6a8a;
+  --chart-5: #6e6a5e;
+  --signal: #b3261e;
+  --signal-wash: #f7e2dd;
+  --safe-wash: #dcebe3;
+  --map-ground: #e6e8e2;
+  --map-block: #d9ddd5;
+  --map-street: #fbfbf8;
+  --map-park: #c9dccb;
+  --map-label: #5b6461;
+  --tape-dark: #141a19;
+  --band: #141a19;
+  --band-foreground: #e7ebe5;
+}
+
+.dark {
+  --background: #0e1312;
+  --foreground: #e7ebe5;
+  --card: #151b1a;
+  --card-foreground: #e7ebe5;
+  --popover: #151b1a;
+  --popover-foreground: #e7ebe5;
+  --primary: #4fbf8e;
+  --primary-foreground: #06140e;
+  --secondary: #1e2624;
+  --secondary-foreground: #e7ebe5;
+  --muted: #1e2624;
+  --muted-foreground: #9ca8a3;
+  --accent: #efcb3a;
+  --accent-foreground: #141a19;
+  --destructive: #f26a55;
+  --destructive-foreground: #1a0604;
+  --border: #2b3532;
+  --input: #6b7773;
+  --ring: #4fbf8e;
+  --chart-1: #4fbf8e;
+  --chart-2: #efcb3a;
+  --chart-3: #f26a55;
+  --chart-4: #7db3d1;
+  --chart-5: #a8a293;
+  --signal: #f26a55;
+  --signal-wash: #34191a;
+  --safe-wash: #14291f;
+  --map-ground: #121817;
+  --map-block: #19211f;
+  --map-street: #2a3431;
+  --map-park: #173026;
+  --map-label: #8f9c97;
+  --tape-dark: #141a19;
+  --band: #1a2321;
+  --band-foreground: #e7ebe5;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-variation-settings: "wdth" 100;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+@layer utilities {
+  /* Signage headings: Archivo stretched wide, heavy. */
+  .font-sign {
+    font-variation-settings: "wdth" 118;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .font-sign-wide {
+    font-variation-settings: "wdth" 125;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  /* The reflective-tape stripe: used only on the live-alert banner and the meet-code plate. */
+  .tape {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--accent) 0 10px,
+      var(--tape-dark) 10px 20px
+    );
+  }
+  .pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+@keyframes ring-out {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes pin-in {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes clasp {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@keyframes slide-share {
+  0% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes rise {
+  0% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

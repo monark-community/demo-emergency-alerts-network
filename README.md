@@ -1,73 +1,78 @@
-# Welcome to your Lovable project
+# Guardian
 
-## Project info
+**Help from the people already nearby.** Guardian asks neighbours within a few hundred metres to come to you when you feel unsafe. Your small deposit pays whoever verifiably shows up: they type the meet code on your screen, you tap "I'm safe", and the people who came split it. Cancel before anyone sets off and you get it back; raise a false alarm and it goes to the people who walked over, and your reputation drops.
 
-**URL**: https://lovable.dev/projects/d4222fc5-7835-4f43-9356-f293c6fc84db
+Guardian brings neighbours, not emergency services. If a life is in danger, call 911 first.
 
-## How can I edit this code?
+This repository is an interactive demo: everything (wallet, network, responders, money) is simulated in the browser. Project brief: https://www.monark.io/en/project/emergency-alerts-network. Built with [Monark](https://www.monark.io).
 
-There are several ways of editing your application.
+## Run it locally
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/d4222fc5-7835-4f43-9356-f293c6fc84db) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Requirements: Node 22 and pnpm 10.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+pnpm install
+pnpm dev          # http://localhost:3154
 ```
 
-**Edit a file directly in GitHub**
+Other scripts:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+pnpm lint
+pnpm typecheck    # next typegen && tsc --noEmit
+pnpm build && pnpm start
+pnpm screenshots  # with the production server running: Playwright screenshots into docs/screenshots/
+```
 
-**Use GitHub Codespaces**
+No environment variables are needed. `NEXT_PUBLIC_SITE_URL` optionally overrides the canonical host (default `https://guardian.monark.io`).
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## What you can do in the demo
 
-## What technologies are used for this project?
+| Route | Flow |
+|-|-|
+| `/en/app` | Connect the demo wallet, pre-approve a maximum deposit, pick a situation and radius, **hold to raise**, watch responders accept and walk in on the map, show your meet code, tap "I'm safe" and see the deposit split. Or cancel. |
+| `/en/app/respond` | See a nearby alert as an area only, accept it to unlock the exact pin, walk there, type the sender's code (a wrong code is refused), and get paid when they confirm. "Simulate a nearby alert" adds a false alarm you can flag. Medical alerts are locked below the Trusted tier. |
+| `/en/app/record` | Reputation and tier ladder, balance and approved amount (change it), the full ledger with block numbers and failed transactions, alert history, **Reset demo**. |
 
-This project is built with:
+Demo controls (the sliders button in the app bar): fail the next transaction, skip ahead one minute, simulate a nearby alert, reset.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## How the simulation works
 
-## How can I deploy this project?
+All of it lives in `src/lib/demo/`, behind a small typed API so the UI could later be pointed at wagmi/viem without changes:
 
-Simply open [Lovable](https://lovable.dev/projects/d4222fc5-7835-4f43-9356-f293c6fc84db) and click on Share -> Publish.
+- `types.ts`: alerts, responders, ledger entries, transaction requests and results.
+- `seed.ts`: the Milton-Parc (Montréal) map geometry, nine responders, scripted acceptances, incoming alert templates and the starting state.
+- `chain.ts`: hashes, blocks and latency (1.2–2.4 s), `Base Sepolia` and `tUSDC`.
+- `sim.ts`: pure functions of *(state, now)*: who was notified, where each responder is, ETAs, check-ins, settlement (shares, walk compensation, refunds), auto-release after the 30-minute window (20 s in the demo), sender confirmation and upheld flags.
+- `store.tsx`: a React provider holding the state, a 250 ms clock, the wallet prompt (every transaction asks Confirm/Reject, then goes pending, then confirmed or failed), and persistence in `localStorage` (every access wrapped in try/catch; the demo works without storage).
 
-## Can I connect a custom domain to my Lovable project?
+Because every status is derived from timestamps, a reload or "Skip ahead" lands in the right place.
 
-Yes, you can!
+## Project structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+src/
+  app/
+    [locale]/              en and fr routes (proxy.ts redirects / by Accept-Language)
+      (site)/              home, how-it-works, credits, pricing (unlinked, noindex), catch-all 404
+      app/                 the demo: Get help, Respond, My record
+      opengraph-image.tsx  per-locale OG image
+    globals.css            Guardian tokens (light and dark) on top of the Monark UI registry theme
+    icon.svg, robots.ts, sitemap.ts
+  components/
+    ui/                    shadcn and Monark UI registry components (wallet, connect-wallet, network-badge, tx-status, token-amount), re-themed
+    site/                  header, footer, brand, locale switch, theme
+    home/                  hero phone, privacy diagram, glyphs
+    map/                   the code-drawn city map and its overlays
+    demo/                  app shell, wallet prompt, flows
+  i18n/                    typed EN/FR dictionaries
+  lib/demo/                the simulated chain and wallet
+docs/
+  site-plan.md             product brief, identity, flows, content (matches what shipped)
+  assets.md                photo credits and code-drawn assets
+  screenshots/             Playwright screenshots, 390px and 1440px, light and dark, EN and FR
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Deploy to Vercel
+
+Import the repository in Vercel and deploy with the defaults: Next.js is detected automatically, there is no `vercel.json`, and no environment variables are required. The Node version is pinned in `package.json` (`engines.node: 22.x`) and `pnpm-lock.yaml` is committed.
