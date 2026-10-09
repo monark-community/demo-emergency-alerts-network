@@ -8,7 +8,7 @@ This repository is an interactive demo: everything (wallet, network, responders,
 
 ## Run it locally
 
-Requirements: Node 22 and pnpm 10.
+Requirements: Node 24 and pnpm 10.
 
 ```sh
 pnpm install
@@ -75,4 +75,4 @@ docs/
 
 ## Deploy to Vercel
 
-Import the repository in Vercel and deploy with the defaults: Next.js is detected automatically, there is no `vercel.json`, and no environment variables are required. The Node version is pinned in `package.json` (`engines.node: 22.x`) and `pnpm-lock.yaml` is committed.
+Import the repository in Vercel and deploy with the defaults: Next.js is detected automatically, there is no `vercel.json`, and no environment variables are required. The Node version is pinned in `package.json` (`engines.node: 24.x`) and `pnpm-lock.yaml` is committed.
