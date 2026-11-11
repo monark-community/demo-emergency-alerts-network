@@ -5,7 +5,9 @@
   "description": "Guardian: ask the people already nearby to come to you when you feel unsafe; a small deposit pays whoever verifiably shows up (simulated demo).",
   "scripts": {
     "dev": "next dev --port 3154",
+    "prebuild": "node scripts/check-node.mjs",
     "build": "next build",
+    "prestart": "node scripts/check-node.mjs",
     "start": "next start --port 3154",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
